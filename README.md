@@ -1,3 +1,5 @@
+# Tortoisebot ROS2 Galactic Release
+
 # ![TortoiseBot Banner](https://github.com/rigbetellabs/tortoisebot_docs/raw/master/imgs/packaging/pack_front.png)
 
 ![stars](https://img.shields.io/github/stars/rigbetellabs/tortoisebot?style=for-the-badge)
@@ -20,48 +22,54 @@
 # 1. Installation
 ## 1.1 Required Dependences: 
 ```
-sudo apt-get install ros-melodic-joy ros-melodic-teleop-twist-joy ros-melodic-teleop-twist-keyboard ros-melodic-amcl ros-melodic-map-server ros-melodic-move-base ros-melodic-urdf ros-melodic-xacro ros-melodic-rqt-image-view ros-melodic-gmapping ros-melodic-navigation ros-melodic-joint-state-publisher ros-melodic-robot-state-publisher ros-melodic-slam-gmapping ros-melodic-dwa-local-planner ros-melodic-joint-state-publisher-gui ros-melodic-cartographer-ros ros-melodic-cartographer-rviz
+sudo apt install ros-galactic-joint-state-publisher ros-galactic-robot-state-publisher ros-galactic-cartographer ros-galactic-cartographer-ros ros-galactic-gazebo-plugins ros-galactic-teleop-twist-keyboard  ros-galactic-teleop-twist-joy ros-galactic-xacro ros-galactic-nav2* ros-galactic-urdf 
+
 ```
 ```
 cd ~/your workscpace
-catkin_make
+colcon build
 ```
 ## 1.2 Clone this repo 
 Make sure you clone the repo in your robot and your remote PC 
 ```
-git clone --recursive https://github.com/rigbetellabs/tortoisebot.git
+git clone -b ros2-galactic --recursive https://github.com/rigbetellabs/tortoisebot.git
 ```
 ```
 cd ~/your workscpace
-catkin_make
+colcon build
 ```
 # 2. Setup
-### 2.1 Running on Simulation
-- Run bringup.launch
-- Run server_bringup.launch
-### SLAM
-- slam.launch
-### Navigation
-- navigation.launch
-### 2.2 Running on Real Robot
-### Running on ROBOT
-- Run bringup.launch
-### Running on REMOTE PC
-- Run server_bringup.launch
-for SLAM
-- slam.launch
-for Nav
-- navigation.launch
+
+- Run bringup.launch.py to only spawn the robot
+- Run autobringup.launch.py to spawn the robot with navigation and slam/localization
+- Launch the files with use_sim_time:=False when working on real robot
+
+### 2.1 Launching the robot
+
+```
+ros2 launch tortoisebot_bringup autobringup.launch.py use_sim_time:=True slam:=True
+```
+- slam:=False for map-based navigation
+
+### 2.2 Launch files for reference
+#### SLAM
+- cartographer.launch.py
+#### Navigation
+- navigation.launch.py
+#### Rviz
+- rviz.launch.py
+#### Gazebo
+- gazebo.launch.py
 
 # 3. Demos
 
-Simulation | Vizualisation of Sensors (Lidar,Odometery,Camera) 
+<!-- Simulation | Vizualisation of Sensors (Lidar,Odometery,Camera) 
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/rigbetellabs/tortoisebot_docs/master/imgs/tortoiseBot_demo/002.png) |![](https://raw.githubusercontent.com/rigbetellabs/tortoisebot_docs/master/imgs/tortoiseBot_demo/005.png) 
 
 Teleop |  Mapping | Navigation 
 :-------------------------:|:-------------------------:|:-------------------------: 
-![](https://raw.githubusercontent.com/rigbetellabs/tortoisebot_docs/master/imgs/tortoiseBot_demo/007.png) |  ![](https://raw.githubusercontent.com/rigbetellabs/tortoisebot_docs/master/imgs/tortoiseBot_demo/006.png) | ![](https://raw.githubusercontent.com/rigbetellabs/tortoisebot_docs/master/imgs/tortoiseBot_demo/010.png)
+![](https://raw.githubusercontent.com/rigbetellabs/tortoisebot_docs/master/imgs/tortoiseBot_demo/007.png) |  ![](https://raw.githubusercontent.com/rigbetellabs/tortoisebot_docs/master/imgs/tortoiseBot_demo/006.png) | ![](https://raw.githubusercontent.com/rigbetellabs/tortoisebot_docs/master/imgs/tortoiseBot_demo/010.png) -->
 
 # The TortoiseBot 🐢🤖
 
