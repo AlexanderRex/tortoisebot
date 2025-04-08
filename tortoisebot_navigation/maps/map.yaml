@@ -1,4 +1,4 @@
-image: /root/simulation_ws/map.pgm
+image: map.pgm
 resolution: 0.05
 origin: [-4.05325, -4.46004, 0.0]
 negate: 0
