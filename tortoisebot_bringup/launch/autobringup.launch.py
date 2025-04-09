@@ -22,7 +22,7 @@ def generate_launch_description():
   params_file= os.path.join(prefix_address, 'config', 'nav2_params.yaml')
   map_file=LaunchConfiguration('map')
   map_directory = os.path.join(get_package_share_directory(
-        'tortoisebot_bringup'), 'maps','room2.yaml')
+        'tortoisebot_bringup'), 'maps','map.yaml')
   use_sim_time=LaunchConfiguration('use_sim_time')
   exploration=LaunchConfiguration('exploration')   
   rviz_launch_cmd=IncludeLaunchDescription(
