@@ -18,19 +18,25 @@ def generate_launch_description():
   ydlidar_launch_dir=os.path.join(get_package_share_directory('ydlidar'), 'launch')
   cartographer_launch_dir=os.path.join(get_package_share_directory('tortoisebot_slam'), 'launch')
   prefix_address = get_package_share_directory('tortoisebot_slam') 
-  default_model_path = os.path.join(pkg_share, 'models/urdf/tortoisebot.xacro')
+  default_model_path = os.path.join(pkg_share, 'models/urdf/tortoisebot_simple.xacro')
   params_file= os.path.join(prefix_address, 'config', 'nav2_params.yaml')
   map_file=LaunchConfiguration('map')
   map_directory = os.path.join(get_package_share_directory(
-        'tortoisebot_bringup'), 'maps','map.yaml')
+        'tortoisebot_bringup'), 'maps','room2.yaml')
   use_sim_time=LaunchConfiguration('use_sim_time')
   exploration=LaunchConfiguration('exploration')   
-  rviz_launch_cmd=IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(rviz_launch_dir, 'rviz.launch.py')),
-            condition=IfCondition(use_sim_time),
-            launch_arguments={'use_sim_time':use_sim_time}.items())
+  default_rviz_config_path = os.path.join(get_package_share_directory('tortoisebot_description'), 'rviz/tortoisebot_sensor_display.rviz')
+   
+  
+  rviz_node = launch_ros.actions.Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        arguments=['-d', LaunchConfiguration('rvizconfig')],
+        parameters= [{'use_sim_time': use_sim_time}],
 
+    )
   state_publisher_launch_cmd=IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(rviz_launch_dir, 'state_publisher.launch.py')),
@@ -66,11 +72,13 @@ def generate_launch_description():
         name ='differential_drive_publisher',
     )
   camera_node = Node(
-      package='raspicam2',
+      package='v4l2_camera',
       condition=IfCondition(PythonExpression(['not ', use_sim_time])),
-      executable='raspicam2_node',
-      name ='pi_camera',
+      executable='v4l2_camera_node',
+      name ='camera1',
+      namespace='camera/',
     )
+
   robot_state_publisher_node = launch_ros.actions.Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -94,6 +102,8 @@ def generate_launch_description():
                                           description='Absolute path to robot urdf file'),
     launch.actions.DeclareLaunchArgument(name='map',default_value=map_directory,
                                           description='Map to be used'),
+    launch.actions.DeclareLaunchArgument(name='rvizconfig', default_value=default_rviz_config_path,
+                                            description='Absolute path to rviz config file'),
  Node(
         package='nav2_map_server',
         condition=IfCondition(PythonExpression(['not ', exploration])),
@@ -113,13 +123,13 @@ def generate_launch_description():
                     {'autostart': True},
                     {'node_names': ['map_server']}]),
 
-    rviz_launch_cmd,
+    rviz_node,
     state_publisher_launch_cmd,
     robot_state_publisher_node,
     joint_state_publisher_node,
     ydlidar_launch_cmd,
     differential_drive_node,
-    gazebo_launch_cmd,
+    # gazebo_launch_cmd,
     navigation_launch_cmd, 
     cartographer_launch_cmd,  
     camera_node
